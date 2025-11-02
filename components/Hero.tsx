@@ -1,8 +1,12 @@
+"use client"
+
 import React from "react";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Globe2, Landmark, Lightbulb, Plane, Send } from "lucide-react";
 import { HeroVideoDialog } from "./ui/hero-video-dialog";
+import { useUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 const suggestions = [
   {
@@ -24,6 +28,16 @@ const suggestions = [
 ];
 
 const Hero = () => {
+
+  const { user } = useUser();
+
+  const onSend = () => {
+    if (!user) {
+      redirect("/sign-in");
+      return;
+    }
+  }
+
   return (
     <div className="flex w-full items-center justify-center mt-24">
       <div className="max-w-3xl w-full text-center space-y-6">
@@ -42,7 +56,7 @@ const Hero = () => {
               placeholder="Enter your travel plans..."
               className="w-full h-28 bg-transparent border-none focus-visible:ring-0 shadow-none resize-none"
             />
-            <Button size={"icon"} className="absolute bottom-3 right-5">
+            <Button size={"icon"} className="absolute bottom-3 right-5" onClick={() => onSend()}>
               <Send className="w-5 h-5" />
             </Button>
           </div>
