@@ -36,6 +36,7 @@ const Hero = () => {
       redirect("/sign-in");
       return;
     }
+    redirect("/create-new-trip");
   }
 
   return (
