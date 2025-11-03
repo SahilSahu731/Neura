@@ -33,7 +33,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "openai/gpt-4.1-mini",
+      model: "openai/gpt-4o-mini",
+      response_format : { type: "json_object" },
       messages: [
         {
           role: "system",
@@ -42,9 +43,21 @@ export async function POST(req: NextRequest) {
         ...messages,
       ],
     });
-    console.log(completion.choices[0].message);
+    
     const message = completion.choices[0].message;
-    return NextResponse.json(JSON.parse(message.content ?? "{}"));
+    const content = message.content ?? "";
+    
+    // Try to parse JSON, fallback to default structure if parsing fails
+    try {
+      const parsedResponse = JSON.parse(content);
+      return NextResponse.json(parsedResponse);
+    } catch (parseError) {
+      // If JSON parsing fails, return the raw content with default UI
+      return NextResponse.json({
+        resp: content,
+        ui: "default"
+      });
+    }
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json(

@@ -8,7 +8,7 @@ import { HeroVideoDialog } from "./ui/hero-video-dialog";
 import { useUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-const suggestions = [
+export const suggestions = [
   {
     title: "Create New Trip",
     icon: <Globe2 className="w-5 h-5 text-blue-400" />,
