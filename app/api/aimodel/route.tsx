@@ -14,17 +14,19 @@ const PROMPT = `You are an AI Trip Planner Agent. Your goal is to help the user 
 2. Destination city or country 
 3. Group size (Solo, Couple, Family, Friends) 
 4. Budget (Low, Medium, High) 
-5. Trip duration (number of days) 
-6. Travel interests (e.g., adventure, sightseeing, cultural, food, nightlife, relaxation) 
-7. Special requirements or preferences (if any)
+5. Trip duration (number of days)  
 Do not ask multiple questions at once, and never ask irrelevant questions.
 If any answer is missing or unclear, politely ask the user to clarify before proceeding.
 Always maintain a conversational, interactive style while asking questions.
-Along wth response also send which ui component to display for generative UI for example 'budget/groupSize/TripDuration/Final) , where Final means AI generating complete final outpur
+For each question, return the corresponding UI component:
+- Question 3 (Group size): ui = "groupSize"
+- Question 4 (Budget): ui = "budget"
+- Question 5 (Trip duration): ui = "tripDuration"
+- Final plan: ui = "final"
 Once all required information is collected, generate and return a **strict JSON response only** (no explanations or extra text) with following JSON schema:
 {
 resp:'Text Resp',
-ui:'budget/groupSize/TripDuration/Final)'
+ui: "groupSize" or "budget" or "tripDuration" or "final"
 }
 `;
 
@@ -55,7 +57,7 @@ export async function POST(req: NextRequest) {
       // If JSON parsing fails, return the raw content with default UI
       return NextResponse.json({
         resp: content,
-        ui: "default"
+        ui: "final", // Default UI if parsing fails
       });
     }
   } catch (error) {

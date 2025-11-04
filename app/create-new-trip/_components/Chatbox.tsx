@@ -6,12 +6,17 @@ import { useUser } from '@clerk/nextjs'
 import axios from 'axios'
 import { Loader, Send } from 'lucide-react'
 import { redirect } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EmptyBoxState from './EmptyBoxState'
+import GroupSizeUI from './GroupSizeUI'
+import BudgetUI from './BudgetUI'
+import TripDurationUI from './TripDurationUI'
+import FinalUI from './FinalUI'
 
 type Message = {
     role: string,
-    content: string
+    content: string,
+    ui ?: string
 }
 
 const Chatbox = () => {
@@ -37,10 +42,29 @@ const Chatbox = () => {
         setLoading(false)
         setMessages((prev:Message[]) => [...prev, {
             role: 'assistant',
-            content: result?.data?.resp || ''
+            content: result?.data?.resp || '',
+            ui: result?.data?.ui || ''
         }])
         console.log(result.data)
   }
+
+  const renderGenUI = (ui: string) => {
+    console.log(ui)
+    if (ui == 'budget') {
+        return <BudgetUI onSelectOption={(v: string) => {setUserInput(v); onSend() }} />
+    } else if (ui == 'groupSize') {
+        return <GroupSizeUI onSelectOption={(v: string) => {setUserInput(v); onSend() }} />
+    } else if (ui == 'tripDuration') {
+        return <TripDurationUI onSelectOption={(v: string) => {setUserInput(v); onSend() }} />
+    } else if (ui == 'final') {
+        return <FinalUI />
+    }
+    return null;
+  }
+
+  useEffect(() => {
+    const lastMsg = messages[messages.length - 1]
+  }, [messages])
 
   return (
     <div className='h-[83vh] flex flex-col'>
@@ -62,6 +86,7 @@ const Chatbox = () => {
             <div className='flex justify-start mt-2' key={index}>
                 <div className='max-w-lg bg-gray-100 text-black px-4 py-2 rounded-lg'>
                     {msg.content}
+                    {renderGenUI(msg?.ui ?? "")}
                 </div>
             </div>
             ))}
