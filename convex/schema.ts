@@ -8,5 +8,11 @@ export default defineSchema({
         imageUrl : v.string(),
         email : v.string(),
         subscription : v.optional(v.string()),
+    }),
+    TripDetailTable : defineTable({
+        tripId : v.string(),
+        uid : v.id('UserTable'),
+        tripDetail : v.any(),
     })
+
 })
