@@ -1,7 +1,7 @@
 'use client';
 import React from 'react'
 
-const FinalUI = () => {
+const FinalUI = ({disable, viewtrip}: {disable: boolean, viewtrip: () => void}) => {
   return (
     <div className="flex flex-col items-center justify-center mt-8 space-y-6">
       <div className="text-center">
@@ -20,7 +20,8 @@ const FinalUI = () => {
       
       <button
         className="px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors flex items-center space-x-2"
-        disabled
+        disabled={disable}
+        onClick={viewtrip}
       >
         <span>View Trip</span>
         <div className="animate-pulse">✈️</div>
